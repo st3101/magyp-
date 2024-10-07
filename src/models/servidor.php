@@ -8,6 +8,17 @@ class Servidor {
         $this->pdo = $pdo;
     }
 
+    // Listar servidores sin pasar $conn, usa $this->pdo
+    function listarServidores() {
+        try {
+            $stmt = $this->pdo->query("SELECT * FROM servidor");  // Usamos $this->pdo aquí
+            $servers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($servers);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => 'Error al recuperar los servidores: ' . $e->getMessage()]);
+        }
+    }
+
     // Método para agregar un servidor
     public function agregar($nombre, $ambiente, $ubicacion, $SO, $CPU, $RAM, $disco, $ip, $comentario, $id_vlan ,$id_owner, $id_responsable) {
         try {
@@ -21,11 +32,11 @@ class Servidor {
         }
     }
 
-    // Método para actualizar un servidor
+    // Método para actualizar un servidor (arreglado el error en la sintaxis)
     public function actualizar($id, $nombre, $ambiente, $ubicacion, $SO, $CPU, $RAM, $disco, $ip, $comentario ,$id_vlan, $id_owner, $id_responsable) {
         try {
             $sql = "UPDATE servidor 
-                    SET nombre = ?, ambiente = ?, ubicacion = ?, SO = ?, CPU = ?, RAM = ?, disco = ?, ip = ?, comentario = ? ,id_vlan = ?, id_owner ,id_responsable = ?
+                    SET nombre = ?, ambiente = ?, ubicacion = ?, SO = ?, CPU = ?, RAM = ?, disco = ?, ip = ?, comentario = ?, id_vlan = ?, id_owner = ?, id_responsable = ?
                     WHERE id = ?";
             $stmt = $this->pdo->prepare($sql);
             return $stmt->execute([$nombre, $ambiente, $ubicacion, $SO, $CPU, $RAM, $disco, $ip, $comentario, $id_vlan, $id_owner, $id_responsable, $id]);

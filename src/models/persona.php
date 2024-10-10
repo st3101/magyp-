@@ -8,6 +8,16 @@ class Persona {
         $this->pdo = $pdo;
     }
 
+    function obtenerJson() {
+        try {
+            $stmt = $this->pdo->query("SELECT * FROM persona");
+            $servers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($servers);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => 'Error al recuperar los servidores: ' . $e->getMessage()]);
+        }
+    }
+    
     public function agregar($nombre, $email, $telefono) {
         $sql = "INSERT INTO persona (nombre, email, telefono) 
                 VALUES (?, ?, ?)";

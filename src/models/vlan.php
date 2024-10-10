@@ -8,6 +8,16 @@ class Vlan{
         $this->pdo = $pdo;
     }
 
+    function obtenerJson() {
+        try {
+            $stmt = $this->pdo->query("SELECT * FROM vlan");  // 
+            $servers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($servers);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => 'Error al recuperar los servidores: ' . $e->getMessage()]);
+        }
+    }
+
     public function agregar($nombre,$numero_vlan, $comentario){
 
         $sql = "INSERT INTO vlan (nombre, numero_vlan, comentario) 

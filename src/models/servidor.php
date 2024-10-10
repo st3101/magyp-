@@ -9,7 +9,7 @@ class Servidor {
     }
 
     // Listar servidores sin pasar $conn, usa $this->pdo
-    function listarServidores() {
+    function obtenerJson() {
         try {
             $stmt = $this->pdo->query("SELECT * FROM servidor");  // Usamos $this->pdo aquí
             $servers = $stmt->fetchAll(PDO::FETCH_ASSOC);

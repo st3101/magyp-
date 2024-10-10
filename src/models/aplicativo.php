@@ -8,16 +8,15 @@ class Aplicativo {
         $this->pdo = $pdo;
     }
 
-    function listarServidores($conn) {
+    function obtenerJson() {
         try {
-            $stmt = $conn->query("SELECT * FROM servers");  
+            $stmt = $this->pdo->query("SELECT * FROM aplicativo");  
             $servers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode($servers);
         } catch (PDOException $e) {
             echo json_encode(['error' => 'Error al recuperar los servidores: ' . $e->getMessage()]);
         }
     }
-
 
     // Método para agregar un aplicativo
     public function agregar($nombre_sistema, $area, $publicador, $url_principal, $comentario, $web, $url_host, $id_servidor) {

@@ -8,7 +8,7 @@ class Vlan{
         $this->pdo = $pdo;
     }
 
-    function obtenerJson() {
+    function obtenerTodoJson() {
         try {
             $stmt = $this->pdo->query("SELECT * FROM vlan");  // 
             $servers = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -17,6 +17,21 @@ class Vlan{
             echo json_encode(['error' => 'Error al recuperar los servidores: ' . $e->getMessage()]);
         }
     }
+
+    function obtenerPorId($id) {
+        try {
+            $sql = "SELECT * FROM vlan WHERE id = :id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute(); // Ejecutar la consulta
+            $vlan = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener los resultados
+            return json_encode($vlan); // Retornar en formato JSON
+    
+        } catch (\Throwable $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+    
 
     public function agregar($nombre,$numero_vlan, $comentario){
 

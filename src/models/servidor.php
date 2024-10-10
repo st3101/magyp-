@@ -9,15 +9,30 @@ class Servidor {
     }
 
     // Listar servidores sin pasar $conn, usa $this->pdo
-    function obtenerJson() {
+    function listarTodosJson() {
         try {
             $stmt = $this->pdo->query("SELECT * FROM servidor");  // Usamos $this->pdo aquí
             $servers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($servers);
+            return json_encode($servers);
         } catch (PDOException $e) {
             echo json_encode(['error' => 'Error al recuperar los servidores: ' . $e->getMessage()]);
         }
     }
+
+    public function obtenerPorID($id) {
+        try {
+            $sql = "SELECT * FROM servidor WHERE servidor.id = :id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $servidor = $stmt->fetch(PDO::FETCH_ASSOC);
+            return json_encode($servidor);
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+    
 
     // Método para agregar un servidor
     public function agregar($nombre, $ambiente, $ubicacion, $SO, $CPU, $RAM, $disco, $ip, $comentario, $id_vlan ,$id_owner, $id_responsable) {
